@@ -93,12 +93,8 @@ class OvnSandboxControllerEngine(SandboxEngine):
         if not deployment_name:
             deployment_name = self.config.get("deployment_name", None)
 
-
-        install_method = self.config.get("install_method", None)
-        if not install_method:
-            print "No install_method, use default"
-            install_method = "sandbox"
-        print "Controller install method: ", install_method
+        install_method = self.config.get("install_method", "sandbox")
+        LOG.info("Controller install method: %s" % install_method)
 
         ovs_user = self.config.get("ovs_user", OVS_USER)
         ovs_controller_cidr = self.config.get("controller_cidr")
@@ -112,7 +108,7 @@ class OvnSandboxControllerEngine(SandboxEngine):
                         (ovs_controller_cidr, net_dev)
 
         if install_method == "docker":
-            print "Do not run ssh; deployed by ansible-docker"
+            LOG.info("Do not run ssh; deployed by ansible-docker")
         elif install_method == "sandbox":
             ovs_server.ssh.run(cmd,
                             stdout=sys.stdout, stderr=sys.stderr)
@@ -129,7 +125,6 @@ class OvnSandboxControllerEngine(SandboxEngine):
                             info={
                                   "ip":ovs_controller_cidr.split('/')[0],
                                   "deployment_name":deployment_name})
-
 
         return {"admin": None}
 

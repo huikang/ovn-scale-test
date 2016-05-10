@@ -22,5 +22,3 @@ class _ResourceType(utils.ImmutableMixin, utils.EnumMixin):
     SANDBOXES = "sandboxes"
 
 ResourceType = _ResourceType()
-
-

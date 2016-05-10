@@ -21,7 +21,6 @@ from rally.task import validation
 LOG = logging.getLogger(__name__)
 
 
-
 class OvnNetwork(ovn.OvnScenario):
     """scenarios for OVN network."""
 
@@ -52,5 +51,3 @@ class OvnNetwork(ovn.OvnScenario):
 
     def bind_and_unbind_ports(self):
         pass
-
-
