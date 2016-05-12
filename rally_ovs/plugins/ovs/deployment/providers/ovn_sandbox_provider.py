@@ -59,7 +59,6 @@ class OvsSandboxProvider(provider.ProviderFactory):
     }
 
 
-
     def __init__(self, deployment, config):
         super(OvsSandboxProvider, self).__init__(deployment, config)
         self.credentials = config["credentials"]
@@ -78,13 +77,6 @@ class OvsSandboxProvider(provider.ProviderFactory):
 
         return servers
 
+
     def destroy_servers(self):
         pass
-
-
-
-
-
-
-
-

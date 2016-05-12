@@ -28,9 +28,6 @@ class SshClient(OvsClient):
         return get_ssh_from_credential(self.credential)
 
 
-
-
-
 @configure("ovn-nbctl")
 class OvnNbctl(OvsClient):
 

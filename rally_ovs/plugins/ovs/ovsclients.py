@@ -26,12 +26,10 @@ def configure(name):
     return plugin.configure(name, namespace=_NAMESPACE)
 
 
-
 class OvsClient(plugin.Plugin):
     def __init__(self, credential, cache_obj):
         self.credential = credential
         self.cache = cache_obj
-
 
     @classmethod
     def get(cls, name, namespace=_NAMESPACE):
@@ -57,10 +55,9 @@ class Clients(object):
         self.credential = credential
         self.cache = {}
 
+
     def __getattr__(self, client_name):
         return OvsClient.get(client_name)(self.credential, self.cache)
-
-
 
     def clear(self):
         """Remove all cached client handles."""
