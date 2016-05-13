@@ -87,14 +87,13 @@ class OvnSandboxControllerEngine(SandboxEngine):
         server = self.servers[0]# only support to deploy controller node
                                 # on one server
 
-        self._deploy(server)
+        install_method = self.config.get("install_method", "sandbox")
+        LOG.info("Controller install method: %s" % install_method)
+        self._deploy(server, install_method)
 
         deployment_name = self.deployment["name"]
         if not deployment_name:
             deployment_name = self.config.get("deployment_name", None)
-
-        install_method = self.config.get("install_method", "sandbox")
-        LOG.info("Controller install method: %s" % install_method)
 
         ovs_user = self.config.get("ovs_user", OVS_USER)
         ovs_controller_cidr = self.config.get("controller_cidr")
