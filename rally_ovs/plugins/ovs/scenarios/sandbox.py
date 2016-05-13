@@ -127,6 +127,8 @@ class SandboxScenario(scenario.OvsScenario):
         net_dev = sandbox_create_args.get("net_dev", "eth0")
         tag = sandbox_create_args.get("tag", "")
 
+        install_method = sandbox_create_args.get("install_method", "sandbox")
+
         if controller_ip == None:
             raise exceptions.NoSuchConfigField(name="controller_ip")
 
@@ -164,8 +166,13 @@ class SandboxScenario(scenario.OvsScenario):
 
                 sandboxes["sandbox-%s" % host_ip] = tag
 
-            self._do_create_sandbox(ssh, cmds)
-
+            if install_method == "docker":
+                print "Do not run ssh; sandbox installed by ansible-docker"
+            elif install_method == "sandbox":
+                self._do_create_sandbox(ssh, cmds)
+            else:
+                print "Invalid install method for controller"
+                exit(1)
 
             batch_left = min(batch, amount - i)
             if batch_left <= 0:
@@ -225,6 +232,3 @@ class SandboxScenario(scenario.OvsScenario):
             cmd = "./ovs-sandbox.sh --ovn %s --stop  %s" % \
                     (graceful, name)
             ssh.run(cmd, stdout=sys.stdout, stderr=sys.stderr);
-
-
-
