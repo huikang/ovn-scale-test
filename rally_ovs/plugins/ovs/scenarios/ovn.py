@@ -104,8 +104,10 @@ class OvnScenario(scenario.OvsScenario):
         self.RESOURCE_NAME_FORMAT = "lport_XXXXXX_XXXXXX"
 
         batch = lport_create_args.get("batch", lport_amount)
-        install_method = lport_create_args.get("install_method", "sandbox")
-        LOG.info("Port create method: %s" % install_method)
+
+        LOG.info("Create lports method: %s" % self.install_method)
+        install_method = self.install_method
+
         network_cidr = lswitch.get("cidr", None)
         ip_addrs = None
         if network_cidr:

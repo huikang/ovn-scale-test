@@ -127,7 +127,8 @@ class SandboxScenario(scenario.OvsScenario):
         net_dev = sandbox_create_args.get("net_dev", "eth0")
         tag = sandbox_create_args.get("tag", "")
 
-        install_method = sandbox_create_args.get("install_method", "sandbox")
+        LOG.info("-------> Create sandbox  method: %s" % self.install_method)
+        install_method = self.install_method
 
         if controller_ip == None:
             raise exceptions.NoSuchConfigField(name="controller_ip")

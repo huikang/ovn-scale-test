@@ -9,7 +9,6 @@
                 {% for farm_index in dmi_data['farm_index'] %}
                 "sandbox_create_args": {
                     "farm": "ovn-farm-node-{{ hostvars[groups['emulation-hosts'][farm_index | int]]['ansible_hostname'] }}",
-                    "install_method": "docker",
                     "amount": {{  dmi_data['num_sandbox_farm'][loop.index0] }},
                     "batch" : 1,
                     "start_cidr": "{{ dmi_data['start_cidr_farm'][loop.index0] }}/{{ dmi_data['prefixlen'] }}",
