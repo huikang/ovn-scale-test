@@ -261,8 +261,8 @@ class OvnScenario(scenario.OvsScenario):
         lport_num = len(lports)
         lport_per_sandbox = (lport_num + sandbox_num - 1) / sandbox_num
 
-        install_method = port_bind_args.get("install_method", "sandbox")
-        LOG.info("Port bind method: %s" % install_method)
+        LOG.info("Bind lports method: %s" % self.install_method)
+        install_method = self.install_method
 
         j = 0
         for i in range(0, len(lports), lport_per_sandbox):
