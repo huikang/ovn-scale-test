@@ -24,12 +24,16 @@ ovn_chassis_start_cidr: "172.16.200.10/16"
 ovn_chassis_device: "eth1"
 
 # Total number of emulated chassis
-ovn_number_chassis: 5
+ovn_number_chassis: 2
 
+# pin container to cores
+north_db_cpu_set: ""
+south_db_cpu_set: ""
+northd_cpu_set: ""
 
 ########################
 # Rally workload options
 ########################
-network_start_cidr: "172.16.201.0/24"
-network_number: "5"
-ports_per_network: "1"
+network_start_cidr: "192.168.1.0/24"
+network_number: "2"
+ports_per_network: "2"

@@ -99,6 +99,14 @@ For example, to define the total number of emulated chasis in the network:
 During deployment, these chassis will be evenly distributed on the emulation
 hosts, which are defined in the inventory file.
 
+Container can be pinned to particular cores by setting
+
+::
+   north_db_cpu_set: "1"
+   south_db_cpu_set: "2"
+   northd_cpu_set: "3"
+
+
 Deploying OVN Emulation
 -----------------------
 

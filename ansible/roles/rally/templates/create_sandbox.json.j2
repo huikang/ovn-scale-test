@@ -13,7 +13,7 @@
                     "batch" : 1,
                     "start_cidr": "{{ dmi_data['start_cidr_farm'][loop.index0] }}/{{ dmi_data['prefixlen'] }}",
                     "net_dev": "{{ ovn_chassis_device }}",
-                    "tag": "ToR-{{ farm_index }}"
+                    "tag": "ToR1"
                 }
                 {% endfor %}
             },

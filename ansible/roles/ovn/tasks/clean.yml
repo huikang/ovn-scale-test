@@ -1,10 +1,19 @@
 ---
-- name: delete OVN database
+- name: delete OVN control plane container
   docker:
-    name: ovn-database
+    name: "{{ item }}"
     image: "{{ ovn_db_image_full }}"
     pull: always
     state: absent
+  with_items:
+    - "ovn-north-database"
+    - "ovn-south-database"
+    - "ovn-northd"
+  when:
+    - inventory_hostname in groups['ovn-database']
+
+- name: delete shared volume for ovn control plane
+  command: docker volume rm ovn-run
   when:
     - inventory_hostname in groups['ovn-database']
 
