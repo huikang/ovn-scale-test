@@ -221,7 +221,6 @@ in the rally container.
 
    rally-ovs task start /root/rally-ovn/workload/create_and_bind_ports.json
 
-
 To clean up the emulation environment, run
 
 ::

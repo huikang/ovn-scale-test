@@ -3,6 +3,7 @@
     - ovn-database
     - emulation-hosts
   roles:
+    - common
     - ovn
 
 - hosts:

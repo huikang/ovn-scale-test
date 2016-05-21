@@ -209,13 +209,12 @@ class OvsVsctl(OvsClient):
             if self.install_method == "docker":
                 self.batch_mode = False
 
-            if self.sandbox and  self.batch_mode == False:
+            if self.sandbox and self.batch_mode == False:
                 if self.install_method == "sandbox":
                     self.cmds.append(". %s/sandbox.rc" % self.sandbox)
                     cmd = itertools.chain(["ovs-vsctl"], opts, [cmd], args)
                     self.cmds.append(" ".join(cmd))
                 elif self.install_method == "docker":
-                    print "docker and not batch"
                     self.cmds.append("sudo docker exec %s ovs-vsctl " % self.sandbox + cmd + " " + " ".join(args))
 
             if self.batch_mode:
@@ -233,8 +232,6 @@ class OvsVsctl(OvsClient):
             if self.sandbox:
                 if self.install_method == "sandbox":
                     self.cmds.insert(0, ". %s/sandbox.rc" % self.sandbox)
-                elif self.install_method == "docker":
-                    print "do docker cmds"
 
             self.ssh.run("\n".join(self.cmds),
                          stdout=sys.stdout, stderr=sys.stderr)
