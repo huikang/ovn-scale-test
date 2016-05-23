@@ -26,7 +26,7 @@ ovn_chassis_device: "eth1"
 # Total number of emulated chassis
 ovn_number_chassis: 2
 
-# pin container to cores
+# pin container to cores, e.g., "29,30,31"
 north_db_cpu_set: ""
 south_db_cpu_set: ""
 northd_cpu_set: ""

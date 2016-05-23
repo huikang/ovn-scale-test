@@ -258,8 +258,12 @@ class OvnScenario(scenario.OvsScenario):
         wait_up = port_bind_args.get("wait_up", False)
 
         sandbox_num = len(sandboxes)
+        print "---> sandbox num: ", sandbox_num
         lport_num = len(lports)
+        print "---> lport num: ", lport_num
         lport_per_sandbox = (lport_num + sandbox_num - 1) / sandbox_num
+
+        print "---> lport per sandbox: ", lport_per_sandbox
 
         LOG.info("Bind lports method: %s" % self.install_method)
         install_method = self.install_method
@@ -270,6 +274,9 @@ class OvnScenario(scenario.OvsScenario):
 
             sandbox = sandboxes[j]["name"]
             farm = sandboxes[j]["farm"]
+            print "---> j: ", j
+            print "---> sandbox type:", type(sandbox)
+
             ovs_vsctl = self.farm_clients(farm, "ovs-vsctl")
             ovs_vsctl.set_sandbox(sandbox, install_method)
             ovs_vsctl.enable_batch_mode()
