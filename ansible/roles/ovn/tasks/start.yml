@@ -52,6 +52,13 @@
   when:
     - inventory_hostname in groups['ovn-database']
 
+- name: create shared volume for ovn chassis processes
+  command: docker volume create --name sandbox-{{ item }}
+  with_items:
+    - "{{ dmi_data['ip_index_list'] }}"
+  when:
+    - inventory_hostname in groups['emulation-hosts']
+
 - name: start OVN chassis
   docker:
     name: "sandbox-{{ item.1 }}"
@@ -62,6 +69,8 @@
     detach: True
     state: started
     command: "ovn_set_chassis {{ ovn_database_alias_ip}} {{ item.1 }}/{{ dmi_data['prefixlen'] }} {{ ovn_database_device }}"
+    volumes:
+      - sandbox-{{ item.1 }}:/usr/local/var/
   delegate_to: "{{ groups['emulation-hosts'][ item.0 ] }}"
   with_together:
         - "{{ dmi_data['ip_index'] }}"
