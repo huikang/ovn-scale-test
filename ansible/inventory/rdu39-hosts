@@ -6,6 +6,7 @@
 # Add host IPs to run emulated OVN chassis
 [emulation-hosts]
 9.47.161.24    provider_ip=9.47.161.24
+9.47.161.53    provider_ip=9.47.161.53
 
 [rally]
 9.47.161.9

@@ -67,7 +67,7 @@ def main():
         # ip_data.index.append(i % int(group_size))
         index = i / chassis_per_host
         if (index >= int(group_size)):
-            index = 0
+            index = int(group_size) - 1
             overflow += 1
         ip_data.index.append(index)
         ip_data.ip_list.append(str(sandbox_hosts.next()))
@@ -79,12 +79,12 @@ def main():
         farm_data.farm_index.append(i)
 
         num_sandbox = chassis_per_host
-        if i == 0:
+        if (i == int(group_size) - 1):
             num_sandbox = chassis_per_host + overflow
         farm_data.num_sandbox_farm.append(num_sandbox)
 
         farm_data.start_cidr_farm.append(str(sandbox_hosts.next()))
-        for i in range (0, num_sandbox):
+        for i in range (0, num_sandbox - 1):
             sandbox_hosts.next()
 
     module.exit_json(changed=True,ip_index=ip_data.index, \
