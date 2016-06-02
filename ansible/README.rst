@@ -199,6 +199,7 @@ In this case, OVN sandboxes will be evenly distributed on these emulation hosts.
 In addition, to register the hosts and sandboxes in the rally-ovs database, the create-sandbox task should be executed for individual farm nodes. Thanks to ansible and jinja2, the create-sandbox will be automatically generated. As in the above case, the following commands must be run in the **ovn-rally** container.
 
 ::
+
    rally-ovs task start /root/rally-ovn/workload/create_sandbox-farm-node-1.json
    rally-ovs task start /root/rally-ovn/workload/create_sandbox-farm-node-2.json
 
