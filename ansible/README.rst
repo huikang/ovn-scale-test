@@ -186,7 +186,8 @@ Register emulated sandboxes in the rally database
 Create sandboxes on multiple farm nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In the ansible inventory file, there could be multiple hosts in the emulation-host section, e.g.,
+In the ansible inventory file, there could be multiple hosts in the
+emulation-host section, e.g.,
 
 ::
 
@@ -194,16 +195,23 @@ In the ansible inventory file, there could be multiple hosts in the emulation-ho
    9.47.161.24    provider_ip=9.47.161.24
    9.47.161.53    provider_ip=9.47.161.53
 
-In this case, OVN sandboxes will be evenly distributed on these emulation hosts. That is given "ovn_number_chassis: 200", each host will run 100 emulated hypervisors.
+In this case, OVN sandboxes will be evenly distributed on these emulation hosts.
+That is given "ovn_number_chassis: 200", each host will run 100 emulated
+hypervisors.
 
-In addition, to register the hosts and sandboxes in the rally-ovs database, the create-sandbox task should be executed for individual farm nodes. Thanks to ansible and jinja2, the create-sandbox will be automatically generated. As in the above case, the following commands must be run in the **ovn-rally** container.
+In addition, to register the hosts and sandboxes in the rally-ovs database, the
+create-sandbox task should be executed for individual farm nodes. Thanks to
+ansible and jinja2, the create-sandbox will be automatically generated. As in
+the above case, the following commands must be run in the **ovn-rally**
+container.
 
 ::
 
    rally-ovs task start /root/rally-ovn/workload/create_sandbox-farm-node-1.json
    rally-ovs task start /root/rally-ovn/workload/create_sandbox-farm-node-2.json
 
-Rnning Rally Workloads
+
+Running Rally Workloads
 ----------------------
 .. _Drive:
 
