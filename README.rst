@@ -2,6 +2,11 @@
 OVN Scale Test
 ==============
 
+Build Status:
+-------------
+
+.. image:: https://travis-ci.org/huikang/ovn-scale-test.svg?branch=travis-ci-ansible
+    :target: https://travis-ci.org/huikang/ovn-scale-test
 
 What is OVN Scale Test
 ======================
@@ -42,6 +47,3 @@ Links
 Code is hosted on github:
 
     https://github.com/openvswitch/ovn-scale-test
-
-
-

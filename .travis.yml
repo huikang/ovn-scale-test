@@ -1,0 +1,16 @@
+---
+sudo: required
+
+env:
+  - distribution: ubuntu
+    version: 14.04
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y python-setuptools python-dev build-essential
+  - sudo pip install -U docker-py netaddr ansible>=2
+
+script: sudo ./test-ansible.sh
