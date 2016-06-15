@@ -99,9 +99,11 @@ For example, to define the total number of emulated chasis in the network:
 During deployment, these chassis will be evenly distributed on the emulation
 hosts, which are defined in the inventory file.
 
-Container can be pinned to particular cores by setting
+OVN control containers can also be pinned to particular cores by setting the
+following variables.
 
 ::
+
    north_db_cpu_set: "1"
    south_db_cpu_set: "2"
    northd_cpu_set: "3"
@@ -116,9 +118,9 @@ Run the ansible playbook
 
     ansible-playbook  -i ansible/inventory/ovn-hosts ansible/site.yml -e action=deploy
 
-The above command deploys ovn-database and the emulated chassis. On the rally
-node, an ovn-rally container is also launched as well as the deployment file and
-workload files.
+The above command deploys ovn control plane containers and the emulated chassis.
+On the rally node, an ovn-rally container is also launched as well as the
+deployment file and workload files.
 
 Ansible allows you to overide the variables in group_vars/all.yml. For example,
 some variables are defined in a separate file, named

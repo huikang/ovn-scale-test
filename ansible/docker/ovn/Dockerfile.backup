@@ -1,15 +1,11 @@
 FROM ovn-scale-test-base
 
-# Used to specify a specific version of OVS to build with
-ARG ovs_repo=https://github.com/openvswitch/ovs.git
-ARG ovs_branch=master
-
 # Download OVS from git master
-RUN git clone $ovs_repo \
+RUN git clone https://github.com/openvswitch/ovs.git \
     && cd /ovs \
     && git checkout 54529e94e96a6b2626d3d26fb619d2e7ab831578 \
     && ./boot.sh \
-    && ./configure \
+    && ./configure CFLAGS="-g -O2 -fno-omit-frame-pointer" \
     &&  make -j4 \
     &&  make install
 

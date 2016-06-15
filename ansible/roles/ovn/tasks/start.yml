@@ -2,7 +2,7 @@
 - name: create shared volume for ovn control plane processes
   command: docker volume create --name ovn-run
   when:
-    - inventory_hostname in groups['ovn-database']
+    - inventory_hostname in groups['ovn-control']
 
 - name: start OVN northbound database
   docker:
@@ -18,7 +18,7 @@
     volumes:
       - ovn-run:/usr/local/var/run/openvswitch/
   when:
-    - inventory_hostname in groups['ovn-database']
+    - inventory_hostname in groups['ovn-control']
 
 - name: start OVN southbound database
   docker:
@@ -34,7 +34,23 @@
     volumes:
       - ovn-run:/usr/local/var/run/openvswitch/
   when:
-    - inventory_hostname in groups['ovn-database']
+    - inventory_hostname in groups['ovn-control']
+
+- name: start OVN northd
+  docker:
+    name: ovn-northd
+    image: "{{ ovn_db_image_full }}"
+    pull: always
+    privileged: yes
+    net: host
+    detach: True
+    state: started
+    cpu_set: "{{ northd_cpu_set }}"
+    command: "ovn-sandbox-northd.sh {{ ovn_database_alias_ip}} {{ ovn_database_device }}"
+    volumes:
+      - ovn-run:/usr/local/var/run/openvswitch/
+  when:
+    - inventory_hostname in groups['ovn-control']
 
 - name: start OVN northd
   docker:
