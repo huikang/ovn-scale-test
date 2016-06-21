@@ -15,9 +15,11 @@
 
 import sys
 import itertools
+from rally.common import logging
 from rally_ovs.plugins.ovs.ovsclients import *
 from rally_ovs.plugins.ovs.utils import get_ssh_from_credential
 
+LOG = logging.getLogger(__name__)
 
 @configure("ssh")
 class SshClient(OvsClient):
@@ -216,6 +218,8 @@ class OvsVsctl(OvsClient):
                     self.cmds.append(" ".join(cmd))
                 elif self.install_method == "docker":
                     self.cmds.append("sudo docker exec %s ovs-vsctl " % self.sandbox + cmd + " " + " ".join(args))
+
+            LOG.info("Run OvsVsctl cmd: %s" % self.cmds)
 
             if self.batch_mode:
                 return

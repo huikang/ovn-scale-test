@@ -9,8 +9,8 @@ deploy_user: "rally"
 # Docker options
 ###################
 
-ovn_db_image: "huikang/ovn-scale-test-ovn"
-ovn_chassis_image: "huikang/ovn-scale-test-ovn"
+ovn_db_image: "huikang/ovn-scale-test-ovn-debug"
+ovn_chassis_image: "huikang/ovn-scale-test-ovn-debug"
 
 rally_image: "huikang/ovn-scale-test-rally"
 
@@ -26,12 +26,13 @@ ovn_chassis_start_cidr: "172.16.200.10/16"
 ovn_chassis_device: "eth1"
 
 # Total number of emulated chassis
-ovn_number_chassis: 2
+ovn_number_chassis: 6
 
 # pin container to cores, e.g., "29,30,31"
 north_db_cpu_set: ""
 south_db_cpu_set: ""
 northd_cpu_set: ""
+
 
 ########################
 # Rally workload options
@@ -43,5 +44,10 @@ ports_per_network: "1"
 ########################
 # OVS Repository to test
 ########################
-ovn_repo: "https://github.com/openvswitch/ovs.git"
-ovn_branch: "master"
+ovs_repo: "https://github.com/openvswitch/ovs.git"
+ovs_branch: "master"
+
+###################
+# Profiling options
+###################
+enable_oprofile: "yes"

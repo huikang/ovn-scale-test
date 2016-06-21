@@ -10,6 +10,7 @@
     image: "{{ ovn_db_image_full }}"
     pull: always
     privileged: yes
+    pid: host
     net: host
     detach: True
     state: started
@@ -26,6 +27,7 @@
     image: "{{ ovn_db_image_full }}"
     pull: always
     privileged: yes
+    pid: host
     net: host
     detach: True
     state: started
@@ -58,6 +60,7 @@
     image: "{{ ovn_db_image_full }}"
     pull: always
     privileged: yes
+    pid: host
     net: host
     detach: True
     state: started
@@ -66,7 +69,7 @@
     volumes:
       - ovn-run:/usr/local/var/run/openvswitch/
   when:
-    - inventory_hostname in groups['ovn-database']
+    - inventory_hostname in groups['ovn-control']
 
 - name: create shared volume for ovn chassis processes
   command: docker volume create --name sandbox-{{ item }}
@@ -81,6 +84,7 @@
     image: "{{ ovn_db_image_full }}"
     pull: always
     privileged: yes
+    pid: host
     net: host
     detach: True
     state: started

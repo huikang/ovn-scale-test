@@ -10,7 +10,6 @@ RUN echo "ovsrepo=$ovsrepo ovsbranch=$ovsbranch" \
     && cd /ovs \
     && git fetch $ovsrepo $ovsbranch \
     && git checkout FETCH_HEAD \
-    && git checkout 54529e94e96a6b2626d3d26fb619d2e7ab831578 \
     && ./boot.sh \
     && ./configure \
     &&  make -j4 \
