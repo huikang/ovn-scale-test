@@ -2,6 +2,11 @@
 OVN Scale Test
 ==============
 
+Build Status:
+-------------
+
+.. image:: https://travis-ci.org/openvswitch/ovn-scale-test.svg?branch=master
+    :target: https://travis-ci.org/openvswitch/ovn-scale-test
 
 What is OVN Scale Test
 ======================
