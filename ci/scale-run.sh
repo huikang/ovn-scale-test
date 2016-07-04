@@ -15,13 +15,14 @@ pushd $OVN_SCALE_TOP
 cd ansible/docker
 make ovsrepo=$OVS_REPO ovsbranch=$OVS_BRANCH
 popd
+$OVNSUDO docker images
 
 # Deploy the containers
 # TODO(mestery): Loop through all hosts in the "[emulation-hosts]" section.
 #                For now, this assumes a single host, so not necessary until
 #                that assumption changes.
 pushd $OVN_SCALE_TOP
-sudo /usr/local/bin/ansible-playbook -i $OVN_DOCKER_HOSTS ansible/site.yml -e @$OVN_DOCKER_VARS \
+$OVNSUDO /usr/local/bin/ansible-playbook -i $OVN_DOCKER_HOSTS ansible/site.yml -e @$OVN_DOCKER_VARS \
      --extra-vars "ovs_repo=$OVS_REPO" --extra-vars "ovs_branch=$OVS_BRANCH" -e action=deploy
 if [ "$?" != "0" ] ; then
     echo "Deploying failed, exiting"
@@ -56,11 +57,19 @@ $OVNSUDO docker exec ovn-rally rally task report $TASKID --out /root/create-and-
 $OVNSUDO docker cp ovn-rally:/root/create-and-list-lports-output.html .
 $OVNSUDO docker exec ovn-rally rally task delete --uuid $TASKID
 
+$OVNSUDO docker exec ovn-rally rally-ovs task start /root/rally-ovn/workload/create_and_list_acls.json
+TASKID=$($OVNSUDO docker exec ovn-rally rally task list --uuids-only)
+$OVNSUDO docker exec ovn-rally rally task report $TASKID --out /root/create-and-list-acls-output.html
+$OVNSUDO docker cp ovn-rally:/root/create-and-list-acls-output.html .
+$OVNSUDO docker exec ovn-rally rally task delete --uuid $TASKID
+
 $OVNSUDO docker exec ovn-rally rally-ovs task start /root/rally-ovn/workload/create_and_bind_ports.json
 TASKID=$($OVNSUDO docker exec ovn-rally rally task list --uuids-only)
 $OVNSUDO docker exec ovn-rally rally task report $TASKID --out /root/create-and-bind-ports-output.html
 $OVNSUDO docker cp ovn-rally:/root/create-and-bind-ports-output.html .
 $OVNSUDO docker exec ovn-rally rally task delete --uuid $TASKID
+
+$OVNSUDO docker ps
 
 # Restore xtrace
 $XTRACE

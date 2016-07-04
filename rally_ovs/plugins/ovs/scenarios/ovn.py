@@ -190,7 +190,7 @@ class OvnScenario(scenario.OvsScenario):
             p = "outport"
 
         ovn_nbctl = self.controller_client("ovn-nbctl")
-        ovn_nbctl.set_sandbox("controller-sandbox")
+        ovn_nbctl.set_sandbox("controller-sandbox", self.install_method)
         ovn_nbctl.enable_batch_mode()
         for lport in lports:
             for i in range(acls_per_port):
@@ -205,7 +205,7 @@ class OvnScenario(scenario.OvsScenario):
     def _list_acl(self, lswitches):
         LOG.info("list ACLs")
         ovn_nbctl = self.controller_client("ovn-nbctl")
-        ovn_nbctl.set_sandbox("controller-sandbox")
+        ovn_nbctl.set_sandbox("controller-sandbox", self.install_method)
         ovn_nbctl.enable_batch_mode(False)
         for lswitch in lswitches:
             LOG.info("list ACLs on lswitch %s" % lswitch["name"])
@@ -305,7 +305,7 @@ class OvnScenario(scenario.OvsScenario):
         ovn_nbctl.enable_batch_mode(True)
 
         for lport in lports:
-            ovn_nbctl.wait_until('Logical_Port', lport["name"], ('up', 'true'))
+            ovn_nbctl.wait_until('Logical_Switch_Port', lport["name"], ('up', 'true'))
 
         ovn_nbctl.flush()
 

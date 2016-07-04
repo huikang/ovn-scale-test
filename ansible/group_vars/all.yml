@@ -14,6 +14,8 @@ ovn_chassis_image: "huikang/ovn-scale-test-ovn-debug"
 
 rally_image: "huikang/ovn-scale-test-rally"
 
+# Valid options are [ missing, always ]
+image_pull_policy: "always"
 
 ###################
 # Emulation options
@@ -40,6 +42,8 @@ northd_cpu_set: ""
 network_start_cidr: "172.16.201.0/24"
 network_number: "5"
 ports_per_network: "1"
+
+acls_per_port: "1"
 
 ########################
 # OVS Repository to test
