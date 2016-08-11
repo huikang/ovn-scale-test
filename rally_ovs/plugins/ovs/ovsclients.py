@@ -101,6 +101,21 @@ def get_lswitch_info(info):
 
     return lswitches
 
+def get_of_in_port(of_port_list_raw, port_name_full):
+    print("------> Look for portname %s" % port_name_full)
+    # NOTE (huikang): the max length of portname shown in of is 15 
+    port_name = port_name_full[0:15]
+    print("------> Look for portname %s" % port_name)
+    lines = of_port_list_raw.splitlines()
+    line = ""
+    for line in lines:
+        if (line.find(port_name) >= 0):
+                break
+    print(line)
+    position = line.find("(")
+    print(str(position))
+    return line[:position]
+#    return "5"
 
 def set_colval_args(*col_values):
     args = []

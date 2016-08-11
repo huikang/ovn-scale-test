@@ -53,14 +53,3 @@ class OvsScenario(scenario.Scenario):
         clients = self._farm_clients[name]
         client = getattr(clients, client_type)
         return client()
-
-
-
-
-
-
-
-
-
-
-

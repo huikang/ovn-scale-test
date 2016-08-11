@@ -15,10 +15,13 @@
 import pipes
 import sys
 import itertools
-import pipes
+import StringIO
+from rally.common import logging
 from rally_ovs.plugins.ovs.ovsclients import *
 from rally_ovs.plugins.ovs.utils import get_ssh_from_credential
 
+
+LOG = logging.getLogger(__name__)
 
 @configure("ssh")
 class SshClient(OvsClient):
@@ -44,6 +47,9 @@ class OvnNbctl(OvsClient):
         def enable_batch_mode(self, value=True):
             self.batch_mode = bool(value)
 
+        def disable_batch_mode(self, value=False):
+            self.batch_mode = bool(value)
+
         def set_sandbox(self, sandbox, install_method="sandbox"):
             self.sandbox = sandbox
             self.install_method = install_method
@@ -52,6 +58,7 @@ class OvnNbctl(OvsClient):
             self.cmds = self.cmds or []
 
             if self.batch_mode:
+                LOG.info("------> batch mode enabled")
                 cmd = itertools.chain([" -- "], opts, [cmd], args)
                 self.cmds.append(" ".join(cmd))
                 return
@@ -63,12 +70,11 @@ class OvnNbctl(OvsClient):
                     self.cmds.append(" ".join(cmd))
                 elif self.install_method == "docker":
                     self.cmds.append("sudo docker exec ovn-north-database ovn-nbctl " + cmd + " " + " ".join(args))
+                    LOG.info("----> ovn-nb command: %s" % self.cmds)
 
             self.ssh.run("\n".join(self.cmds),
                          stdout=stdout, stderr=stderr)
-
             self.cmds = None
-
 
         def flush(self):
             if self.cmds == None or len(self.cmds) == 0:
@@ -124,6 +130,19 @@ class OvnNbctl(OvsClient):
         '''
         param address: [mac,ip], [mac] ...
         '''
+        def lport_get_addresses(self, name):
+            params = [name]
+            LOG.info("----> get address for port %s" % params)
+            stdout = StringIO.StringIO()
+            self.run("lsp-get-addresses", args=params, stdout=stdout)
+            output = stdout.getvalue()
+            addresses = output.split()
+            LOG.info("----> get address: %s" % addresses[0])
+            return addresses[0]
+
+        '''
+        param address: [mac,ip], [mac] ...
+        '''
         def lport_set_addresses(self, name, *addresses):
             params = [name]
 
@@ -167,7 +186,7 @@ class OvnNbctl(OvsClient):
 
         def show(self, lswitch=None):
             params = [lswitch] if lswitch else []
-            stdout = StringIO()
+            stdout = StringIO.StringIO()
             self.run("show", args=params, stdout=stdout)
             output = stdout.getvalue()
 
@@ -203,7 +222,7 @@ class OvsVsctl(OvsClient):
             self.sandbox = sandbox
             self.install_method = install_method
 
-        def run(self, cmd, opts=[], args=[]):
+        def run(self, ovs_cmd, cmd, opts=[], args=[], stdout=sys.stdout):
             self.cmds = self.cmds or []
 
             # TODO: tested with non batch_mode only for docker
@@ -213,17 +232,19 @@ class OvsVsctl(OvsClient):
             if self.sandbox and self.batch_mode == False:
                 if self.install_method == "sandbox":
                     self.cmds.append(". %s/sandbox.rc" % self.sandbox)
-                    cmd = itertools.chain(["ovs-vsctl"], opts, [cmd], args)
+                    cmd = itertools.chain([ovs_cmd], opts, [cmd], args)
                     self.cmds.append(" ".join(cmd))
                 elif self.install_method == "docker":
-                    self.cmds.append("sudo docker exec %s ovs-vsctl " % self.sandbox + cmd + " " + " ".join(args))
+                    LOG.info("------> Form docker command")
+                    self.cmds.append("sudo docker exec %s " % self.sandbox + " "
+                                     + ovs_cmd + " " + cmd + " " + " ".join(args))
+                    LOG.info("------> Docker command: %s" % self.cmds)
 
             if self.batch_mode:
                 return
 
             self.ssh.run("\n".join(self.cmds),
-                         stdout=sys.stdout, stderr=sys.stderr)
-
+                         stdout=stdout, stderr=sys.stderr)
             self.cmds = None
 
         def flush(self):
@@ -242,13 +263,41 @@ class OvsVsctl(OvsClient):
 
         def add_port(self, bridge, port, may_exist=True):
             opts = ['--may-exist'] if may_exist else None
-            self.run('add-port', opts, [bridge, port])
+            self.run("ovs-vsctl", 'add-port', opts, [bridge, port])
 
 
         def db_set(self, table, record, *col_values):
             args = [table, record]
             args += set_colval_args(*col_values)
-            self.run("set", args=args)
+            self.run("ovs-vsctl", "set", args=args)
+
+        def of_check(self, bridge, port, mac_addr, may_exist=True):
+            in_port = ""
+            stdout = StringIO.StringIO()
+            self.run("ovs-ofctl", "show br-int", stdout=stdout)
+            show_br_int_output = stdout.getvalue()
+            LOG.debug("------> show_br_int_output: %s" % show_br_int_output)
+            in_port = get_of_in_port(show_br_int_output, port)
+            LOG.info("Check port: in_port: %s; mac: %s" % (in_port.strip(), mac_addr))
+            #'''
+            appctl_cmd = " ofproto/trace br-int in_port=" + in_port.strip()
+            appctl_cmd += ",dl_src=" + mac_addr
+            appctl_cmd += ",dl_dst=00:00:00:00:00:03 -generate "
+            LOG.info("------> appctl cmd: %s" % appctl_cmd)
+            self.run("ovs-appctl", appctl_cmd, stdout=stdout)
+            of_trace_output = stdout.getvalue()
+            #LOG.info("------> of trace output: %s" % of_trace_output)
+
+            # NOTE(HuiKang): if success, the flow goes through table 1 to table
+            # 32. However, since we use sandbox, table 32 seems not setup
+            # correctly. Therefore after table 34, the datapath action is
+            # Datapath actions: 100. If failed, the datapatch action is "drop"
+            for line in of_trace_output.splitlines():
+                if (line.find("Datapath actions") >= 0):
+                    LOG.info("---> Datapath actions: %s" % line)
+                    if (line.find("drop") >= 0):
+                        return False
+            return True
 
     def create_client(self):
         print "*********   call OvnNbctl.create_client"

@@ -16,6 +16,7 @@
   command: docker volume rm ovn-run
   when:
     - inventory_hostname in groups['ovn-control']
+  ignore_errors: yes
 
 - name: delete OVN chassis
   docker:

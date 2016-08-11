@@ -213,7 +213,7 @@ function start_ovn {
     echo "Starting OVN"
 
     run ovn-controller --no-chdir --pidfile \
-                    -vconsole:off -vsyslog:off -vfile:info --log-file
+                    -vconsole:off -vsyslog:off -vfile:warn --log-file
 }
 
 configure_ovn
