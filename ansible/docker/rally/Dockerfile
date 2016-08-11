@@ -1,5 +1,6 @@
 FROM ovn-scale-test-base
 
+RUN apt-get update -y
 RUN apt-get install -y --no-install-recommends \
             build-essential \
             libssl-dev \
@@ -21,7 +22,7 @@ RUN cd rally_ovn_scale_test \
     && ./install_rally.sh
 
 # Install OVN scale test plugin for rally
-COPY ovn-scale-test ovn-scale-test
+COPY ovn-scale-test-github ovn-scale-test
 RUN cd ovn-scale-test \
     && ./install.sh
 

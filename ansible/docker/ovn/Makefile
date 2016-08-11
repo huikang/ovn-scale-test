@@ -1,4 +1,4 @@
-image_name=ovn-scale-test-ovn
+image_name=huikang/ovn-scale-test-ovn-upstream
 
 ifndef ovsrepo
 ovs_repo=https://github.com/openvswitch/ovs.git
@@ -6,6 +6,7 @@ else
 ovs_repo=${ovsrepo}
 endif
 ifndef ovsbranch
+#ovs_branch= ryan-physical-persist-tunnel
 ovs_branch=master
 else
 ovs_branch=${ovsbranch}
@@ -18,4 +19,4 @@ endif
 
 image:
 	echo "ovs_repo: ${ovs_repo} ovs_branch: ${ovs_branch}"
-	${OVNSUDO} docker build --build-arg ovsrepo=${ovs_repo} --build-arg ovsbranch=${ovs_branch} --build-arg configflags=${config_flags} --force-rm=true -t ${image_name} .
+	${OVNSUDO} docker build --build-arg ovsrepo=${ovs_repo} --build-arg ovsbranch=${ovs_branch} --build-arg configflags=${config_flags} --force-rm=true --no-cache -t ${image_name} .
