@@ -146,10 +146,6 @@ class OvnNetwork(ovn.OvnScenario):
         sandboxes = self.context["sandboxes"]
 
         lswitches = self._create_networks(network_create_args)
-        for lswitch in lswitches:
-            lports = self._create_lports(lswitch, port_create_args, ports_per_network)
-            self._bind_ports(lports, sandboxes, port_bind_args)
-            self._of_check_ports(lports, sandboxes, port_bind_args)
 
         logical_networks = []
         logical_networks = initialize_logical_networks(lswitches)
