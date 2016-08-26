@@ -283,6 +283,7 @@ class OvnScenario(scenario.OvsScenario):
 
                 LOG.info("of check %s to %s on %s" % (port_name, sandbox, farm))
 
+
                 # check if OF rules installed correctly
                 mac_addr = self.port_mac[port_name]
                 LOG.info("MAC address: %s" % mac_addr)

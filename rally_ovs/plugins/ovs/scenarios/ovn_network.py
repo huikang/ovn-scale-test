@@ -146,7 +146,6 @@ class OvnNetwork(ovn.OvnScenario):
         sandboxes = self.context["sandboxes"]
 
         lswitches = self._create_networks(network_create_args)
-
         logical_networks = []
         logical_networks = initialize_logical_networks(lswitches)
         if networks_per_sandbox == None:
