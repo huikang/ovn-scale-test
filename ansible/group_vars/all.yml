@@ -24,6 +24,9 @@ image_pull_policy: "always"
 # Emulation options
 ###################
 
+# Valid options are [ info, dbg ]
+ovn_log_level: "info"
+
 ovn_database_alias_ip: "172.16.20.100/16"
 ovn_database_device: "eth1"
 
@@ -49,6 +52,10 @@ ports_bind_batch_size: "1"
 networks_created_batch_size: "1"
 
 acls_per_port: "1"
+
+# from 0 to network_number
+networks_per_sandbox: "1"
+
 
 ########################
 # OVS Repository to test
