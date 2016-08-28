@@ -142,7 +142,7 @@ class OvnScenario(scenario.OvsScenario):
             ovn_nbctl.lport_set_addresses(name, [mac, ip])
             # ovn_nbctl.lport_set_addresses(name, [mac])
             ovn_nbctl.lport_set_port_security(name, mac)
-            self.port_mac[name] = mac
+            # self.port_mac[name] = mac
 
             lports.append(lport)
 
