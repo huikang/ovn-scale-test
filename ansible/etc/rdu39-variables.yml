@@ -1,0 +1,58 @@
+---
+
+node_config_directory: "/etc/ovn-scale-test"
+ontainer_config_directory: "/var/lib/ovn-scale-test/config_files"
+
+###################
+# Docker options
+###################
+
+ovn_db_image: "huikang/ovn-scale-test-ovn-upstream"
+ovn_chassis_image: "huikang/ovn-scale-test-ovn-upstream"
+
+rally_image: "huikang/ovn-scale-test-rally-upstream"
+
+# Valid options are [ missing, always ]
+image_pull_policy: "missing"
+
+###################
+# Emulation options
+###################
+
+ovn_database_alias_ip: "172.16.100.3/16"
+ovn_database_device: "eth0.3239"
+
+ovn_chassis_start_cidr: "172.16.100.10/16"
+ovn_chassis_device: "eth0.3239"
+
+# Total number of emulated chassis
+ovn_number_chassis: 4
+
+# pin container to cores, e.g., "29,30,31"
+north_db_cpu_set: "29"
+south_db_cpu_set: "30"
+northd_cpu_set: "31"
+
+########################
+# Rally workload options
+########################
+network_start_cidr: "192.168.100.0/16"
+network_number: "8"
+ports_per_network: "4"
+ports_created_batch_size: "1"
+networks_created_batch_size: "2"
+
+# from 0 to network_number
+networks_per_sandbox: "8"
+
+
+########################
+# OVS Repository to test
+########################
+ovs_repo: "https://github.com/openvswitch/ovs.git"
+ovs_branch: "master"
+
+###################
+# Profiling options
+###################
+enable_oprofile: "yes"
