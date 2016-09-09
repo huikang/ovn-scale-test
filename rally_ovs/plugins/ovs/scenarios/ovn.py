@@ -239,7 +239,10 @@ class OvnScenario(scenario.OvsScenario):
         lswitches = self._create_lswitches(network_create_args)
         batch = network_create_args.get("batch", len(lswitches))
 
+        batch = network_create_args.get("batch", 1)
+
         LOG.info("Create network method: %s" % self.install_method)
+        LOG.info("Batch: %s" % batch)
         if physnet != None:
             ovn_nbctl = self.controller_client("ovn-nbctl")
             ovn_nbctl.set_sandbox("controller-sandbox", self.install_method)
@@ -257,6 +260,7 @@ class OvnScenario(scenario.OvsScenario):
                 flush_count -= 1
                 if flush_count < 1:
                     ovn_nbctl.flush()
+                    LOG.info("Flush commands")
                     flush_count = batch
 
             ovn_nbctl.flush()

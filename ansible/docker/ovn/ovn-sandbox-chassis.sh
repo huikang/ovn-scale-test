@@ -10,7 +10,7 @@ schema=/usr/local/share/openvswitch/vswitch.ovsschema
 controller_ip=$1
 host_ip=$2
 device=$3
-
+log_level=$4
 #
 # IP related code start
 #
@@ -176,7 +176,7 @@ function start_ovs {
     run ovsdb-tool create conf.db "$schema"
 
     run ovsdb-server --detach --no-chdir --pidfile \
-        -vconsole:off -vsyslog:off -vfile:info --log-file \
+        -vconsole:off -vsyslog:off -vfile:${log_level} --log-file \
         --remote=punix:"$sandbox"/db.sock \
         conf.db
 
@@ -206,8 +206,8 @@ function start_ovs {
     ovs-vsctl --no-wait set open_vswitch . external-ids:ovn-bridge-mappings=providernet:br0
 
     run ovs-vswitchd --detach --no-chdir --pidfile \
-        -vconsole:off -vsyslog:off -vfile:info --log-file \
-        --enable-dummy=override # -vvconn:info -vnetdev_dummy:info
+        -vconsole:off -vsyslog:off -vfile:${log_level} --log-file \
+        --enable-dummy=override -vvconn -vnetdev_dummy
 }
 
 function start_ovn {

@@ -1,4 +1,4 @@
-image_name=huikang/ovn-scale-test-rally-upstream
+image_name=huikang/ovn-scale-test-rally-upstream-test
 
 image:
 	tar cvzf /tmp/ovn-scale-test.tgz ../../../../ovn-scale-test-github

@@ -12,6 +12,7 @@ ovnnb_schema=/usr/local/share/openvswitch/ovn-nb.ovsschema
 
 controller_ip=$1
 device=$2
+log_level=$3
 
 #
 # IP related code start
@@ -176,7 +177,7 @@ function start_ovn {
     ovn-sbctl init
 
     run ovn-northd  --no-chdir --pidfile \
-              -vconsole:off -vsyslog:off -vfile:info --log-file \
+              -vconsole:off -vsyslog:off -vfile:${log_level} --log-file \
               --log-file=/usr/local/var/run/openvswitch/ovn-northd.log \
               --ovnnb-db=unix:/usr/local/var/run/openvswitch/ovnnb_db.sock \
               --ovnsb-db=unix:/usr/local/var/run/openvswitch/ovnsb_db.sock
