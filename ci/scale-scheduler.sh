@@ -10,14 +10,14 @@ set -o errexit
 rally_image="huikang/ovn-scale-test-rally-upstream-test"
 
 # for num_chassis in 60 80 100
-for num_chassis in 100
+for num_chassis in 200 400 600
 do
-# for num_network_sandbox in 10 50 100 500 1000
-for num_network_sandbox in 100 500 1000
+for num_network_sandbox in 10 50 100 500 1000
+# for num_network_sandbox in 10 
 do
     # num_networks=$(( $num_chassis * $num_network_sandbox ))
-    num_networks=1000
-    file_name="./ci/rally_ovs_${num_chassis}_chassis_${num_network_sandbox}_net-sandbox"
+    num_networks=2000
+    file_name="./ci/rally_ovs_${num_chassis}_chassis_${num_network_sandbox}_net-sandbox_${num_networks}_networks"
     echo "Running create_and_binding ${num_chassis} sandboxes; ${num_networks} networks; ${num_network_sandbox} network/sandbox" >> ${file_name}
 
     # Deploy sandboxes

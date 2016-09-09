@@ -51,6 +51,7 @@
     - "create_and_list_lports"
     - "create_networks"
     - "create_and_list_acls"
+    - "add_ports_to_network"
 
 - name: Copying over create-sandbox file on farm node
   template:

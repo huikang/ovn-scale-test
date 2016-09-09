@@ -46,7 +46,7 @@
     detach: True
     state: started
     cpu_set: "{{ northd_cpu_set }}"
-    command: "ovn-sandbox-northd.sh {{ ovn_database_alias_ip}} {{ ovn_database_device }}"
+    command: "ovn-sandbox-northd.sh {{ ovn_database_alias_ip}} {{ ovn_database_device }} {{ ovn_log_level }}"
     volumes:
       - ovn-run:/usr/local/var/run/openvswitch/
   when:
@@ -61,7 +61,7 @@
     net: host
     detach: True
     state: started
-    command: "ovn_set_chassis {{ ovn_database_alias_ip}} {{ item.1 }}/{{ dmi_data['prefixlen'] }} {{ ovn_database_device }}"
+    command: "ovn_set_chassis {{ ovn_database_alias_ip}} {{ item.1 }}/{{ dmi_data['prefixlen'] }} {{ ovn_database_device }} {{ ovn_log_level }}"
   delegate_to: "{{ groups['emulation-hosts'][ item.0 ] }}"
   with_together:
         - "{{ dmi_data['ip_index'] }}"
