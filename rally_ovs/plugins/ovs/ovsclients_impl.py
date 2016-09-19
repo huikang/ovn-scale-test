@@ -60,12 +60,14 @@ class OvnNbctl(OvsClient):
                 return
 
             if self.sandbox:
+                cmd_prefix = []
                 if self.install_method == "sandbox":
                     self.cmds.append(". %s/sandbox.rc" % self.sandbox)
-                    cmd = itertools.chain(["ovn-nbctl"], opts, [cmd], args)
-                    self.cmds.append(" ".join(cmd))
                 elif self.install_method == "docker":
-                    self.cmds.append("sudo docker exec ovn-north-database ovn-nbctl " + cmd + " " + " ".join(args))
+                    cmd_prefix = ["sudo docker exec ovn-north-database"]
+
+                cmd = itertools.chain(cmd_prefix, ["ovn-nbctl"], opts, [cmd], args)
+                self.cmds.append(" ".join(cmd))
 
             self.ssh.run("\n".join(self.cmds),
                          stdout=stdout, stderr=stderr)
@@ -91,6 +93,24 @@ class OvnNbctl(OvsClient):
             self.cmds = None
 
 
+        def db_set(self, table, record, *col_values):
+            args = [table, record]
+            args += set_colval_args(*col_values)
+            self.run("set", args=args)
+
+
+        def lrouter_port_add(self, lrouter, name, mac=None, ip_addr=None):
+            params =[lrouter, name, mac, ip_addr]
+            self.run("lrp-add", args=params)
+            return {"name":name}
+
+
+        def lrouter_add(self, name):
+            params = [name]
+            self.run("lr-add", args=params)
+            return {"name":name}
+
+
         def lswitch_add(self, name):
             params = [name]
 
@@ -108,7 +128,7 @@ class OvnNbctl(OvsClient):
         def lswitch_list(self):
             self.run("ls-list")
 
-        def lport_add(self, lswitch, name):
+        def lswitch_port_add(self, lswitch, name):
             params =[lswitch, name]
             self.run("lsp-add", args=params)
 
@@ -175,6 +195,17 @@ class OvnNbctl(OvsClient):
             output = stdout.getvalue()
 
             return get_lswitch_info(output)
+
+        def sync(self, wait='hv'):
+            # sync command should always be flushed
+            opts = ["--wait=%s" % wait]
+            batch_mode = self.batch_mode
+            if batch_mode:
+                self.flush()
+                self.batch_mode = False
+
+            self.run("sync", opts)
+            self.batch_mode = batch_mode
 
     def create_client(self):
         print "*********   call OvnNbctl.create_client"

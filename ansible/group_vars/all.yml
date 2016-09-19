@@ -5,6 +5,9 @@ container_config_directory: "/var/lib/ovn-scale-test/config_files"
 
 deploy_user: "rally"
 
+# Deploy rally or not
+enable_rally_ovs: "yes"
+
 ###################
 # Docker options
 ###################
@@ -42,8 +45,17 @@ northd_cpu_set: ""
 network_start_cidr: "172.16.201.0/24"
 network_number: "5"
 ports_per_network: "1"
+ports_created_batch_size: "1"
+networks_created_batch_size: "1"
 
 acls_per_port: "1"
+
+router_number: "1"
+routers_create_batch_size: "1"
+networks_per_router: "2"
+# Valid options are [ none, join, chain ]
+router_connection_method: "none"
+
 
 ########################
 # OVS Repository to test

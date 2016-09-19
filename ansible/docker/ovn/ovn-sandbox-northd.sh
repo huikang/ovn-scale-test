@@ -164,13 +164,19 @@ function start_ovs {
     ovs-vsctl --db=unix:/usr/local/var/run/openvswitch/ovnsb_db.sock --no-wait \
         -- set open_vswitch .  manager_options=@uuid \
         -- --id=@uuid create Manager target="$OVSDB_REMOTE" inactivity_probe=0
+    ovs-vsctl --db=unix:/usr/local/var/run/openvswitch/ovnnb_db.sock --no-wait \
+        -- set open_vswitch .  manager_options=@uuid \
+        -- --id=@uuid create Manager target="$OVSDB_REMOTE" inactivity_probe=0
 }
 
 function start_ovn {
     echo "Starting OVN northd"
 
+    ovn-nbctl init
+    ovn-sbctl init
+
     run ovn-northd  --no-chdir --pidfile \
-              -vconsole:off -vsyslog:off -vfile:info --verbose --log-file \
+              -vconsole:off -vsyslog:off -vfile:info --log-file \
               --log-file=/usr/local/var/run/openvswitch/ovn-northd.log \
               --ovnnb-db=unix:/usr/local/var/run/openvswitch/ovnnb_db.sock \
               --ovnsb-db=unix:/usr/local/var/run/openvswitch/ovnsb_db.sock
