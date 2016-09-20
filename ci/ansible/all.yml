@@ -47,6 +47,8 @@ networks_per_router: "2"
 # Valid options are [ none, join, chain ]
 router_connection_method: "none"
 
+# from 0 to network_number, 0 means even distribution (default)
+networks_per_sandbox: "0"
 
 ################
 # OVS Repository

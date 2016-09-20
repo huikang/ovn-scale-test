@@ -25,6 +25,7 @@ class LogicalNetwork():
     def __init__(self):
         self.sandboxes = []
         self.ports_per_network = 0
+        self.lswitch = None
 
     def set_lswitch(self, lswitch):
         self.lswitch = lswitch
@@ -40,6 +41,8 @@ class LogicalNetwork():
 
     def get_ports_per_network(self):
         return self.ports_per_network
+
+
 
 def initialize_logical_networks(lswitches):
     LOG.info("Initialize logical lswitches with %s" % lswitches)
@@ -70,6 +73,7 @@ def allocate_networks_on_sandboxes(logical_networks, sandboxes, networks_per_san
     else:
         LOG.info("Sanity check")
 
+        # Sanity check
         num_networks = len(logical_networks)
 
         if (num_networks % networks_per_sandbox) != 0 :
