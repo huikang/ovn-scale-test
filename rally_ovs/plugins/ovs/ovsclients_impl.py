@@ -69,12 +69,13 @@ class OvnNbctl(OvsClient):
                     self.cmds.append(". %s/sandbox.rc" % self.sandbox)
                 elif self.install_method == "docker":
                     cmd_prefix = ["sudo docker exec ovn-north-database"]
-
-                cmd = itertools.chain(cmd_prefix, ["ovn-nbctl"], opts, [cmd], args)
-                self.cmds.append(" ".join(cmd))
+                    # self.cmds.append("sudo docker exec ovn-north-database ovn-nbctl " + cmd + " " + " ".join(args))
 
                 LOG.info("----> ovn-nb command: %s" % self.cmds)
-
+                cmd = itertools.chain(cmd_prefix, ["ovn-nbctl"], opts, [cmd], args)
+                self.cmds.append(" ".join(cmd))
+ 
+            LOG.info("----> ovn-nb command: %s" % self.cmds)
             self.ssh.run("\n".join(self.cmds),
                          stdout=stdout, stderr=stderr)
             self.cmds = None
@@ -97,6 +98,24 @@ class OvnNbctl(OvsClient):
             self.cmds = None
 
 
+        def db_set(self, table, record, *col_values):
+            args = [table, record]
+            args += set_colval_args(*col_values)
+            self.run("set", args=args)
+
+
+        def lrouter_port_add(self, lrouter, name, mac=None, ip_addr=None):
+            params =[lrouter, name, mac, ip_addr]
+            self.run("lrp-add", args=params)
+            return {"name":name}
+
+
+        def lrouter_add(self, name):
+            params = [name]
+            self.run("lr-add", args=params)
+            return {"name":name}
+
+
         def lswitch_add(self, name):
             params = [name]
 
@@ -105,16 +124,30 @@ class OvnNbctl(OvsClient):
 
             return {"name":name}
 
+        def lrouter_add(self, name):
+            params = [name]
+            self.run("lr-add", args=params)
+            return {"name":name}
+
         def lswitch_del(self, name):
             params = [name]
             self.run("ls-del", args=params)
 
+        def db_set(self, table, record, *col_values):
+            args = [table, record]
+            args += set_colval_args(*col_values)
+            self.run("set", args=args)
 
+        def lrouter_port_add(self, lrouter, name, mac=None, ip_addr=None):
+            params =[lrouter, name, mac, ip_addr]
+            self.run("lrp-add", args=params)
+
+            return {"name":name}
 
         def lswitch_list(self):
             self.run("ls-list")
 
-        def lport_add(self, lswitch, name):
+        def lswitch_port_add(self, lswitch, name):
             params =[lswitch, name]
             self.run("lsp-add", args=params)
 
