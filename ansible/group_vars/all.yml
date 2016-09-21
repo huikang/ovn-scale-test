@@ -57,14 +57,14 @@ networks_per_sandbox: "0"
 acls_per_port: "1"
 
 # from 0 to network_number
-networks_per_sandbox: "1"
+chassis_per_network: "{{ ovn_number_chassis}}"
+
 
 router_number: "1"
 routers_create_batch_size: "1"
 # Valid options are [ none, join, chain ]
 router_connection_method: "none"
 networks_per_router: "2"
-router_connection_method: "none"
 
 
 ########################

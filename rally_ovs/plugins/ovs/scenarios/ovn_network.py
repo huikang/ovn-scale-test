@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import random
 from rally.common import logging
 from rally_ovs.plugins.ovs.scenarios import ovn
 
@@ -55,6 +56,47 @@ def initialize_logical_networks(lswitches):
         logical_networks.append(logical_network)
 
     LOG.info("In Logical networks: %s" % logical_networks[0].get_lswitch())
+    return logical_networks
+
+def allocate_networks_on_sandboxes_v2(logical_networks, sandboxes, chassis_per_network):
+    LOG.info("Allocate networks on sandboxes")
+    LOG.info("Chassis per network %s" % chassis_per_network)
+
+    for network in logical_networks:
+        LOG.info("Network: %s" % network.get_lswitch())
+
+    LOG.info("Sanity check")
+
+    # Sanity check
+    num_networks = len(logical_networks)
+
+    if (chassis_per_network > len(sandboxes)) or (chassis_per_network < 1):
+        message = ("Invalid %d chassis_per_network; should be [0, %d]")
+        raise exceptions.InvalidConfigException(
+            message  % (chassis_per_network, len(sandboxes)))
+
+    if chassis_per_network == len(sandboxes):
+        LOG.info("Default allocation")
+        for logical_network in logical_networks:
+            for sandbox in sandboxes:
+                logical_network.add_sandbox(sandbox)
+    else:
+        LOG.info("chassis per network: %s" % chassis_per_network)
+
+        sandbox_set = []
+        for i in range(0, len(sandboxes)):
+            sandbox_set.append(i)
+        LOG.info("Set: %s" % sandbox_set)
+
+        for network in logical_networks:
+            sandbox_ids = random.sample(sandbox_set, chassis_per_network)
+            LOG.info("Selected set: %s" % sandbox_ids)
+            for i in range(0, chassis_per_network):
+                # sandbox_id = random.randint(0, len(sandboxes)-1)
+                idx = sandbox_ids[i]
+                LOG.info("random id: %d, sandbox %s" % (idx, sandboxes[idx]["name"]))
+                network.add_sandbox(sandboxes[idx])
+
     return logical_networks
 
 
@@ -200,6 +242,7 @@ class OvnNetwork(ovn.OvnScenario):
     def create_and_bind_ports(self,
                               network_create_args=None,
                               networks_per_sandbox=None,
+                              chassis_per_network=None,
                               port_create_args=None,
                               ports_per_network=None,
                               port_bind_args=None):
@@ -212,11 +255,12 @@ class OvnNetwork(ovn.OvnScenario):
         logical_networks = initialize_logical_networks(lswitches)
         if networks_per_sandbox == None:
             networks_per_sandbox = 0
-        logical_networks = allocate_networks_on_sandboxes(logical_networks, sandboxes, networks_per_sandbox)
+        # logical_networks = allocate_networks_on_sandboxes(logical_networks, sandboxes, networks_per_sandbox)
+        logical_networks = allocate_networks_on_sandboxes_v2(logical_networks, sandboxes, chassis_per_network)
 
         LOG.info("Logical networks %s" % logical_networks[0].get_lswitch())
         LOG.info("Allocate network successfully")
-#        return
+        # return
 
         for logical_network in logical_networks:
             lports = self._create_lports(logical_network.get_lswitch(), port_create_args, ports_per_network)

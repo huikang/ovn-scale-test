@@ -45,6 +45,9 @@ networks_created_batch_size: "2"
 # from 0 to network_number
 networks_per_sandbox: "8"
 
+# any number between [ 1, ovn_number_chassis ]
+chassis_per_network: 3
+
 
 ########################
 # OVS Repository to test

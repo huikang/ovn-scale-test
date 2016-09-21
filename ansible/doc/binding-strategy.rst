@@ -18,32 +18,33 @@ strategy in creating and binding port rally task.
 Binding Configuration
 =====================
 
-Use ``networks_per_sandbox`` to control how logical networks and the logical
+Use ``chassis_per_network`` to control how logical networks and the logical
 ports are bind to chassis.
 
 For example, given ``ovn_number_chassis: 10`` (10 emulated chassis) and
-``network_number: 10`` (10 logical networks), the binding varies depending
-on the value of ``networks_per_sandbox``.
+``network_number: 5`` (5 logical networks), the binding varies depending
+on the value of ``chassis_per_network``.
 
-- ``networks_per_sandbox: "10"``: this is the default case. All networks will
-be evenly distributed to all chassis.
+- ``chassis_per_network: "10"``: this is the default case. Each network spans on
+the 10 chassis
 
-- ``networks_per_sandbox: "2"``: each chassis has ports belong to two logical
-networks. In this case, the 10 logical networks are divided into 5 groups, say
-[n0, n1], [n2, n3], [n4, n5], [n6, n7], [n8, n9]. Then ports in [n0, n1] are
-bind to chassis 0 and 1, [n2, n3] to chassis 2 and 3, and so forth. As a
-result, each chassis has two logical network as configured.
 
-- ``networks_per_sandbox: "1"``: each chassis has ports belong to only one
-logical network. In this case, the 10 logical network will have a one-to-one
-mapping to the 10 chassis. Note that this is the extreme case as opposite to
-``networks_per_sandbox: "10"``.
+- ``chassis_per_network: "2"``: each network will allocate its ports to two
+chassis. In the rally_ovs implementation, we randomly select two chassis out of
+the 10 chassis. Although some randomness, the overall allocation follows a
+uniform distribution.
+
+
+- ``chassis_per_network: "1"``: each network allocates all its port to a single
+chassis. Note that this is the extreme case as opposite to
+``chassis_per_network: "10"``.
 
 
 Constraint
 ~~~~~~~~~
 
-TBD
+``chassis_per_network`` must be [1, ``num_chassis``].
+
 
 Implementation Detail
 =====================
