@@ -22,9 +22,9 @@ do
     ansible-playbook -i ansible/inventory/rdu39-hosts ansible/site.yml -e @ansible/etc/rdu39-variables.yml \
 	-e rally_image=${rally_image} \
 	-e ovn_number_chassis=${num_chassis} \
-	-e ports_per_network=${ports_per_network} \
 	-e chassis_per_network=${chassis_per_network} \
 	-e network_number=${num_networks} \
+	-e ports_per_network=${ports_per_network} \
 	-e action=deploy
 
     # Registerring rally environment
@@ -38,7 +38,7 @@ do
     docker exec ovn-rally rally-ovs task start /root/rally-ovn/workload/create_and_bind_ports.json >> ${file_name}
 
     # Cleanup deployment
-    ansible-playbook  -i ansible/inventory/rdu39-hosts ansible/site.yml -e @ansible/etc/rdu39-variables.yml -e ovn_number_chassis=${num_chassis} -e rally_image=huikang/ovn-scale-test-rally-upstream-test -e action=clean
+    ansible-playbook  -i ansible/inventory/rdu39-hosts ansible/site.yml -e @ansible/etc/rdu39-variables.yml -e ovn_number_chassis=${num_chassis} -e rally_image=${rally_image} -e action=clean
 
     # break
     sleep 20

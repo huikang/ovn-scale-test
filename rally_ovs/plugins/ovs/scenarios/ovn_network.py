@@ -264,6 +264,8 @@ class OvnNetwork(ovn.OvnScenario):
 
         for logical_network in logical_networks:
             lports = self._create_lports(logical_network.get_lswitch(), port_create_args, ports_per_network)
+            if (len(lports) < len(logical_network.get_sandboxes())):
+                LOG.warn("Number of ports less than chassis: inbalance binding\n")
             self._bind_ports(lports, logical_network.get_sandboxes(), port_bind_args)
             # self._of_check_ports(lports, sandboxes, port_bind_args)
 

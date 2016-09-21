@@ -26,7 +26,7 @@ ovn_chassis_start_cidr: "172.16.100.10/16"
 ovn_chassis_device: "eth0.3239"
 
 # Total number of emulated chassis
-ovn_number_chassis: 4
+ovn_number_chassis: 10
 
 # pin container to cores, e.g., "29,30,31"
 north_db_cpu_set: "29"
@@ -37,13 +37,13 @@ northd_cpu_set: "31"
 # Rally workload options
 ########################
 network_start_cidr: "192.168.100.0/16"
-network_number: "8"
+network_number: "20"
 ports_per_network: "4"
 ports_created_batch_size: "1"
 networks_created_batch_size: "2"
 
 # from 0 to network_number
-networks_per_sandbox: "8"
+networks_per_sandbox: "20"
 
 # any number between [ 1, ovn_number_chassis ]
 chassis_per_network: 3

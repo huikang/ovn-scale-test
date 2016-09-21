@@ -1,18 +1,19 @@
+#image_name=huikang/ovn-scale-test-ovn-upstream-debug
 image_name=huikang/ovn-scale-test-ovn-upstream
 
 ifndef ovsrepo
-ovs_repo=https://github.com/openvswitch/ovs.git
+ovs_repo=https://github.com/huikang/ovs.git
 else
 ovs_repo=${ovsrepo}
 endif
 ifndef ovsbranch
 #ovs_branch= ryan-physical-persist-tunnel
-ovs_branch=master
+ovs_branch=master-upstream
 else
 ovs_branch=${ovsbranch}
 endif
 ifndef configflags
-config_flags="--enable-Werror"
+#config_flags="--enable-Werror"
 else
 config_flags=${configflags}
 endif
