@@ -256,7 +256,7 @@ class OvnNetwork(ovn.OvnScenario):
         if networks_per_sandbox == None:
             networks_per_sandbox = 0
         # logical_networks = allocate_networks_on_sandboxes(logical_networks, sandboxes, networks_per_sandbox)
-        logical_networks = allocate_networks_on_sandboxes_v2(logical_networks, sandboxes, chassis_per_network)
+        logical_networks = allocate_networks_on_sandboxes_v2(logical_networks, sandboxes, int(chassis_per_network))
 
         LOG.info("Logical networks %s" % logical_networks[0].get_lswitch())
         LOG.info("Allocate network successfully")
