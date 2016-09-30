@@ -207,8 +207,9 @@ class OvnNetwork(ovn.OvnScenario):
             lnetwork = lnetworks[i]
             LOG.info("networks %s cidr %s" % (lnetwork["name"], lnetwork["cidr"]))
 
-        self.connect_networks_to_routers(lnetworks, lrouters, networks_per_router)
 
+        # Connect network to routers
+        self._connect_networks_to_routers(lnetworks, lrouters, networks_per_router)
 
     @validation.number("ports_per_network", minval=1, integer_only=True)
     @scenario.configure(context={})
@@ -216,7 +217,10 @@ class OvnNetwork(ovn.OvnScenario):
                                   router_connection_method=None,
                                   networks_per_router=None,
                                   network_create_args=None,
+<<<<<<< HEAD
                                   chassis_per_network=None,
+=======
+>>>>>>> b8aa608e9ead423053aa00b6b034c58f3b4962ae
                                   port_create_args=None,
                                   ports_per_network=None,
                                   port_bind_args=None):
@@ -228,15 +232,20 @@ class OvnNetwork(ovn.OvnScenario):
         num_networks = int(networks_per_router) * num_router
         lnetworks = self._create_networks(network_create_args, num_networks)
 
+<<<<<<< HEAD
         for i in range(len(lnetworks)):
             lnetwork = lnetworks[i]
             LOG.info("networks %s cidr %s" % (lnetwork["name"], lnetwork["cidr"]))
 
         self.connect_networks_to_routers(lnetworks, lrouters, networks_per_router)
+=======
+        self._connect_networks_to_routers(lnetworks, lrouters, networks_per_router)
+>>>>>>> b8aa608e9ead423053aa00b6b034c58f3b4962ae
 
         # Create ports on the logical networks
         sandboxes = self.context["sandboxes"]
 
+<<<<<<< HEAD
         logical_networks = []
         logical_networks = initialize_logical_networks(lnetworks)
         if chassis_per_network == None:
@@ -254,6 +263,13 @@ class OvnNetwork(ovn.OvnScenario):
             self._bind_ports(lports, logical_network.get_sandboxes(), port_bind_args)
             # self._of_check_ports(lports, sandboxes, port_bind_args)
 
+=======
+        for network in lnetworks:
+            lports = self._create_lports(network, port_create_args, ports_per_network)
+            if (len(lports) < len(sandboxes)):
+                LOG.warn("Number of ports less than chassis: inbalance binding\n")
+            self._bind_ports(lports, sandboxes, port_bind_args)
+>>>>>>> b8aa608e9ead423053aa00b6b034c58f3b4962ae
 
 
     @validation.number("ports_per_network", minval=1, integer_only=True)
@@ -275,7 +291,7 @@ class OvnNetwork(ovn.OvnScenario):
         if networks_per_sandbox == None:
             networks_per_sandbox = 0
         # logical_networks = allocate_networks_on_sandboxes(logical_networks, sandboxes, networks_per_sandbox)
-        logical_networks = allocate_networks_on_sandboxes_v2(logical_networks, sandboxes, chassis_per_network)
+        logical_networks = allocate_networks_on_sandboxes_v2(logical_networks, sandboxes, int(chassis_per_network))
 
         LOG.info("Logical networks %s" % logical_networks[0].get_lswitch())
         LOG.info("Allocate network successfully")
